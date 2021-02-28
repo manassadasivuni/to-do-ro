@@ -20,7 +20,7 @@ app.on('ready', function () {
     });
     // Load html file
     mainWindow.loadURL(url.format({
-        pathname: path.join(__dirname, 'mainWindow.html'),
+        pathname: path.join(__dirname, 'html/mainWindow.html'),
         protocol: 'file:',
         slashes: true
     }));
@@ -49,7 +49,7 @@ function createAddWindow() {
     });
     // Load html file
     addWindow.loadURL(url.format({
-        pathname: path.join(__dirname, 'addWindow.html'),
+        pathname: path.join(__dirname, 'html/addWindow.html'),
         protocol: 'file:',
         slashes: true
     }));
@@ -57,13 +57,18 @@ function createAddWindow() {
     // Garbage collection handle
     addWindow.on('close', function () {
         addWindow = null;
-    })
-}
+    });
+};
 
 // Catch item:add
 ipcMain.on('item:add', function (e, item) {
     mainWindow.webContents.send('item:add', item);
     addWindow.close();
+});
+
+// Open addWindow from button
+ipcMain.on('item:openAdd', function(){
+    createAddWindow();
 });
 
 // Create menu template
@@ -107,7 +112,7 @@ if (process.env.NODE_ENV != 'production') {
         submenu: [
             {
                 label: 'Toggle dev tools',
-                accelerator: process.platform == 'darwin' ? 'Command+I' : 'Ctrl+I',
+                accelerator: 'CmdOrCtrl+I',
                 click(item, focusedWindow) {
                     focusedWindow.toggleDevTools();
                 }

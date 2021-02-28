@@ -3,21 +3,31 @@
 
 <head>
     <title>to-do-ro</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
 </head>
 
 <body>
     <nav>
-        <div class="nav-wrapper">
-            <a class="brand-logo center">To-do list</a>
+        <div>
+            <a>To-do list</a>
         </div>
     </nav>
-    <ul></ul>
+    <div>
+        <div>
+            <div>
+                <button type="add item" id="add">+</button>
+            </div>
+            <div>
+                <ul></ul>
+            </div>
+        </div>
+    </div>
+
 
     <script>
         const electron = require('electron');
         const { ipcRenderer } = electron;
         const ul = document.querySelector('ul');
+        const button = document.querySelector('button');
 
         // Catch item:add
         ipcRenderer.on('item:add', function (e, item) {
@@ -28,6 +38,13 @@
             li.appendChild(itemText);
             ul.appendChild(li);
         });
+
+        button.addEventListener('click', newItem);
+
+        function newItem(e) {
+            e.preventDefault();
+            ipcRenderer.send('item:openAdd', null);
+        };
 
         // Catch item:clear
         ipcRenderer.on('item:clear', function () {
